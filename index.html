@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ea66c7 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        h3 {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            padding: 15px 20px;
+            width: 400px;
+            max-width: 100%;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+        }
+
+        input[type="text"]:focus {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        button {
+            padding: 15px 40px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        #messages {
+            margin-top: 30px;
+            background: rgb(34, 33, 33);
+            padding: 20px;
+            border-radius: 15px;
+            min-width: 400px;
+            max-width: 100%;
+            min-height: 200px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-family: monospace;
+            color: #f6f1f1;
+        }
+    </style>
+</head>
+<body>
+    <h1 >WebSocket Chat</h1>
+    <h3>status</h3>
+    <input type="text" placeholder="send ur thoughts">
+    <button>Send</button>
+    <pre id="messages"></pre>
+</body>
+<script>
+    const status = document.querySelector('h3');
+    const input = document.querySelector('input');
+    const buton = document.querySelector('button');
+    const messages = document.querySelector('#messages');
+    const appendmsg =(label,msg)=>{
+        const time = new Date().toLocaleTimeString();
+        messages.textContent += `[${time}] ${label}: ${msg}\n`;
+    }
+
+    const socket = new WebSocket('ws://localhost:8080');
+    socket.addEventListener('open',()=>{
+        status.textContent= 'ws:localhost:8080';
+        status.style.color = 'lightgreen';
+        appendmsg('[SYSTEM]','TUNNEL ESTABLISHED');
+    })
+    socket.addEventListener('message',(event)=>{
+        
+        appendmsg('[recived]',event.data);
+    })
+
+    socket.addEventListener('close',()=>{
+        status.textContent= 'disconnected';
+        status.style.color = 'red';
+        appendmsg('[SYSTEM]','TUNNEL CLOSED');
+    })
+    buton.addEventListener('click',()=>{
+        const msg = input.value.trim();
+
+        if(socket.readyState === 1){
+            socket.send(msg);
+            appendmsg('[sent]',msg);
+            input.value = '';
+        }
+    })
+</script>
+</html>
