@@ -1,0 +1,17 @@
+{
+  "name": "adrianjs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch source/index.js",
+    "start": "node source/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
