@@ -33,3 +33,7 @@ export const commentry = pgTable('commentry', {
   tags: text('tags').array(),
 
 })
+
+// 1. schema design
+// 2. then generate migration using drizzle-kit
+// 3. then run the migration to create the tables in the database
